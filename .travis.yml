@@ -1,0 +1,33 @@
+dist: trusty
+language: csharp
+solution: unit-testing-using-dotnet-test.sln
+dotnet: 2.1.502
+python: 3.6
+jdk:
+  - oraclejdk8
+
+branches:
+  except:
+    - jenkins
+  only:
+    - travis
+    - travis-ci
+    - master
+
+script:
+  - cp ./Travis.SonarQube.Analysis.xml ./SonarQube.Analysis.xml
+  - python3 bin/build.py -k "timbo:dotnet-code-coverage"
+  #- bin/dotnet-sonarscanner begin /k:"timbo:dotnet-code-coverage" #/s:"SonarQube.Analysis.xml"
+  #/d:sonar.sources=Calculation,PrimeService\
+  #/d:sonar.inclusions=Calculation/Basic/*.cs,PrimeService/PrimeService.cs\
+  #/d:sonar.exclusions=Calculation/bin/**/*,Calculation/obj/**/*,PrimeService/bin/**/*,PrimeService/obj/**/*\
+  #/d:sonar.tests=CalculationTests,PrimeServiceTests\
+  #/d:sonar.test.inclusions=CalculationTests/*.cs,PrimeServiceTests/*.cs\
+  #/d:sonar.cs.opencover.reportsPaths=calculation.opencover.xml,prime.opencover.xml\
+  #/d:sonar.dotnet.visualstudio.solution.file=unit-testing-using-dotnet-test.sln
+  #- sonar-scanner -Dsonar.verbose=true
+
+addons:
+  sonarcloud:
+    organization: timbo
+
